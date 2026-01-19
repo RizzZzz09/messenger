@@ -1,0 +1,11 @@
+# --- Runtime (app) ---
+fastapi==0.128.0
+uvicorn[standard]==0.40.0
+pydantic==2.12.5
+python-dotenv==1.2.1
+
+# --- Dev (quality & tooling) ---
+ruff==0.14.13
+black==26.1.0
+mypy==1.19.1
+pre-commit==4.5.1
