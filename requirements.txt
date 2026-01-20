@@ -4,6 +4,8 @@ uvicorn[standard]==0.40.0
 pydantic==2.12.5
 python-dotenv==1.2.1
 pydantic-settings==2.12.0
+SQLAlchemy==2.0.45
+asyncpg==0.31.0
 
 # --- Dev (quality & tooling) ---
 ruff==0.14.13

@@ -1,14 +1,17 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db.session import get_db
 
 app = FastAPI()
 
 
-@app.get(
-    "/health", summary="Проверка", tags=["Технические"], description="Проверка работоспособности"
-)
-async def root() -> dict[str, str]:
-    return {"message": "Hello World!"}
+@app.get("/health/db")
+async def health(db: AsyncSession = Depends(get_db)) -> dict[str, str]:
+    await db.execute(text("SELECT 1"))
+    return {"status": "ok"}
 
 
 if __name__ == "__main__":
