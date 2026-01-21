@@ -6,6 +6,9 @@ python-dotenv==1.2.1
 pydantic-settings==2.12.0
 SQLAlchemy==2.0.45
 asyncpg==0.31.0
+alembic==1.18.1
+psycopg==3.3.2
+psycopg-binary==3.3.2
 
 # --- Dev (quality & tooling) ---
 ruff==0.14.13
