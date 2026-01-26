@@ -3,6 +3,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
 from app.schemas.auth import RegisterRequest, RegisterResponse
+from app.services.auth import register_user
+from app.services.errors import (
+    EmailAlreadyExistsError,
+    UsernameAlreadyExistsError,
+    UsernameContainsWhitespaceError,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -11,4 +17,11 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 async def register(
     payload: RegisterRequest, db: AsyncSession = Depends(get_db)
 ) -> RegisterResponse:
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    try:
+        user = await register_user(db, payload)
+    except UsernameContainsWhitespaceError as error:
+        raise HTTPException(status_code=422, detail=error.reason) from error
+    except (EmailAlreadyExistsError, UsernameAlreadyExistsError) as error:
+        raise HTTPException(status_code=409, detail=error.reason) from error
+    else:
+        return RegisterResponse.model_validate(user)
