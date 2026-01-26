@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import DateTime, String, func
+from sqlalchemy import DateTime, String, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -11,6 +11,10 @@ class User(Base):
     """ORM-модель пользователя."""
 
     __tablename__ = "users"
+    __table_args__ = (
+        UniqueConstraint("email", name="uq_users_email"),
+        UniqueConstraint("username", name="uq_users_username"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -21,16 +25,12 @@ class User(Base):
 
     email: Mapped[str] = mapped_column(
         String(255),
-        unique=True,
-        index=True,
         nullable=False,
         comment="Электронная почта пользователя",
     )
 
     username: Mapped[str] = mapped_column(
         String(64),
-        unique=True,
-        index=True,
         nullable=False,
         comment="Имя пользователя",
     )
