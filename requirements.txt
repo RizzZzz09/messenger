@@ -10,6 +10,7 @@ alembic==1.18.1
 psycopg==3.3.2
 psycopg-binary==3.3.2
 argon2-cffi==25.1.0
+authx==1.5.0
 
 # --- Dev (quality & tooling) ---
 ruff==0.14.13
