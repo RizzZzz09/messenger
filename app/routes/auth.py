@@ -18,10 +18,26 @@ from app.services.errors import (
     UsernameContainsWhitespaceError,
 )
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["Аутентификация"])
 
 
-@router.post("/register", response_model=RegisterResponse, status_code=201)
+@router.post(
+    "/register",
+    response_model=RegisterResponse,
+    status_code=201,
+    summary="Регистрация пользователя",
+    description=(
+        "Регистрация нового пользователя.\n\n"
+        "- Создаёт пользователя с уникальными email и username\n"
+        "- Пароль сохраняется в захешированном виде\n"
+        "- Возвращает данные созданного пользователя"
+    ),
+    responses={
+        201: {"description": "Пользователь успешно зарегистрировался."},
+        409: {"description": "Адрес электронной почты или имя пользователя уже существуют."},
+        422: {"description": "Неверные входные данные"},
+    },
+)
 async def register(
     payload: RegisterRequest, db: AsyncSession = Depends(get_db)
 ) -> RegisterResponse:
@@ -35,7 +51,20 @@ async def register(
         return RegisterResponse.model_validate(user)
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post(
+    "/login",
+    response_model=LoginResponse,
+    summary="Вход пользователя",
+    description=(
+        "Аутентификация пользователя по email или username.\n\n"
+        "- Возвращает access-токен в теле ответа\n"
+        "- Устанавливает refresh-токен в HttpOnly cookie"
+    ),
+    responses={
+        401: {"description": "Неверные учетные данные"},
+        422: {"description": "Ошибка проверки"},
+    },
+)
 async def login(
     payload: LoginRequest, response: Response, db: AsyncSession = Depends(get_db)
 ) -> LoginResponse:

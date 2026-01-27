@@ -6,7 +6,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.routes.auth import router as auth_router
 
-app = FastAPI()
+app = FastAPI(
+    title="Messenger API",
+    description=(
+        "Backend API для мессенджера.\n\n"
+        "Включает регистрацию, авторизацию (JWT), управление пользователями и сообщениями."
+    ),
+    version="0.1.0",
+)
 
 
 @app.get("/health/db")
