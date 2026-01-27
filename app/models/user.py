@@ -24,19 +24,19 @@ class User(Base):
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
-        comment="Уникальный ID пользователя",
+        comment="UUID пользователя",
     )
 
     email: Mapped[str] = mapped_column(
         String(255),
         nullable=False,
-        comment="Электронная почта пользователя",
+        comment="Электронная почта пользователя (уникальна)",
     )
 
     username: Mapped[str] = mapped_column(
         String(64),
         nullable=False,
-        comment="Имя пользователя",
+        comment="Имя пользователя (уникально)",
     )
 
     password_hash: Mapped[str] = mapped_column(
@@ -48,7 +48,7 @@ class User(Base):
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
-        comment="Дата регистрации пользователя",
+        comment="Дата создания учетной записи пользователя",
     )
 
     refresh_sessions: Mapped[list["RefreshSession"]] = relationship(
