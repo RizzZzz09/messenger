@@ -1,6 +1,7 @@
 from typing import ClassVar
 
 
+# --- Группировка 1: Ошибки при работе с пользователем ---
 class UserError(Exception):
     """Базовая ошибка при работе с пользователем."""
 
@@ -35,3 +36,31 @@ class UsernameAlreadyExistsError(UserError):
 
     def __init__(self, username: str) -> None:
         super().__init__(f'Username: "{username}" already exists')
+
+
+# --- Группировка 2: Ошибки уровня сервиса ---
+class ServiceError(Exception):
+    """Базовая ошибка при работе с сервисом."""
+
+    reason: ClassVar[str]
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+
+class InvalidUsernameError(ServiceError):
+    """Пользователя с таким именем не существует."""
+
+    reason: ClassVar[str] = "invalid_username"
+
+    def __init__(self) -> None:
+        super().__init__("Invalid credentials")
+
+
+class InvalidPasswordError(ServiceError):
+    """Неверный пароль."""
+
+    reason: ClassVar[str] = "invalid_password"
+
+    def __init__(self) -> None:
+        super().__init__("Invalid credentials")
