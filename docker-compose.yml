@@ -2,6 +2,8 @@ services:
   db:
     image: postgres:16
     container_name: messenger-postgres
+    env_file:
+      - .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -15,5 +17,24 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  db_test:
+    image: postgres:16
+    container_name: messenger-postgres-test
+    env_file:
+      - .env.test
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - messenger_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 volumes:
   messenger_data:
+  messenger_test_data:
