@@ -106,8 +106,8 @@ async def login_user(db: AsyncSession, login: str, password: str) -> tuple[str, 
         raise InvalidPasswordError()
 
     session_id = uuid.uuid4()
-    access_token = auth.create_access_token(subject=str(user.id))
-    refresh_token = auth.create_refresh_token(subject=str(user.id), sid=str(session_id))
+    access_token = auth.create_access_token(uid=str(user.id))
+    refresh_token = auth.create_refresh_token(uid=str(user.id), sid=str(session_id))
     refresh_token_hash = hash_refresh_token(refresh_token)
     expires_at = datetime.now(timezone.utc) + timedelta(days=settings.JWT_REFRESH_TOKEN_EXPIRES)
 
