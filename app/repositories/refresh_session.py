@@ -46,6 +46,23 @@ class RefreshSessionRepository:
         result = await self._db.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def get_active_by_id(self, session_id: UUID) -> RefreshSession | None:
+        """Возвращает текущую активную refresh-сессию по ее UUID.
+
+        Args:
+            session_id: UUID записи refresh-сессии.
+
+        Returns:
+            Активная refresh-сессия, если найдена, иначе None.
+        """
+        stmt = (
+            select(RefreshSession)
+            .where(RefreshSession.id == session_id)
+            .where(RefreshSession.revoked_at.is_(None))
+        )
+        result = await self._db.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def revoke(self, session_id: UUID) -> bool:
         """Отзывает refresh-сессию (ставит revoked_at = now()).
 
