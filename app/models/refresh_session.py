@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, ForeignKey, String, func
@@ -37,17 +38,17 @@ class RefreshSession(Base):
         comment="Хэш refresh-токена (не хранить токен в чистом виде)",
     )
 
-    expires_at: Mapped[DateTime] = mapped_column(
+    expires_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), comment="Дата истечения refresh-сессии"
     )
 
-    created_at: Mapped[DateTime] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         comment="Дата создания refresh-сессии",
     )
 
-    revoked_at: Mapped[DateTime] = mapped_column(
+    revoked_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=True,
         comment="Дата отзыва refresh-сессии (если отозвана)",

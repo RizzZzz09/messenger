@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, String, UniqueConstraint, func
@@ -45,7 +46,7 @@ class User(Base):
         comment="Хешированный пароль пользователя",
     )
 
-    created_at: Mapped[DateTime] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         comment="Дата создания учетной записи пользователя",
