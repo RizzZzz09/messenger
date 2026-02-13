@@ -1,7 +1,9 @@
 from typing import ClassVar
 
 
-# --- Группировка 1: Ошибки при работе с пользователем ---
+# =============================================================================
+# Базовые типы ошибок
+# =============================================================================
 class UserError(Exception):
     """Базовая ошибка при работе с пользователем."""
 
@@ -11,6 +13,18 @@ class UserError(Exception):
         super().__init__(message)
 
 
+class ServiceError(Exception):
+    """Базовая ошибка при работе с сервисом."""
+
+    reason: ClassVar[str]
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+
+# =============================================================================
+# Ошибки домена пользователя (регистрация / данные пользователя)
+# =============================================================================
 class UsernameContainsWhitespaceError(UserError):
     """Имя пользователя содержит пробелы."""
 
@@ -38,16 +52,9 @@ class UsernameAlreadyExistsError(UserError):
         super().__init__(f'Username: "{username}" already exists')
 
 
-# --- Группировка 2: Ошибки уровня сервиса ---
-class ServiceError(Exception):
-    """Базовая ошибка при работе с сервисом."""
-
-    reason: ClassVar[str]
-
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
-
-
+# =============================================================================
+# Ошибки аутентификации и учетных данных
+# =============================================================================
 class InvalidUsernameError(ServiceError):
     """Пользователя с таким именем не существует."""
 
@@ -64,3 +71,33 @@ class InvalidPasswordError(ServiceError):
 
     def __init__(self) -> None:
         super().__init__("Invalid credentials")
+
+
+class InvalidRefreshTokenError(ServiceError):
+    """Refresh token не валиден как токен."""
+
+    reason: ClassVar[str] = "invalid_refresh_token"
+
+    def __init__(self) -> None:
+        super().__init__("Invalid refresh token")
+
+
+# =============================================================================
+# Ошибки refresh-сессий (состояние БД / несоответствия)
+# =============================================================================
+class RefreshSessionNotFoundError(ServiceError):
+    """Refresh сессии не существует."""
+
+    reason: ClassVar[str] = "refresh_session_not_found"
+
+    def __init__(self) -> None:
+        super().__init__("Refresh session not found")
+
+
+class RefreshSessionMismatchError(ServiceError):
+    """Uid/sid mismatch между токеном и сессией."""
+
+    reason: ClassVar[str] = "refresh_session_mismatch"
+
+    def __init__(self) -> None:
+        super().__init__("Refresh session mismatch")

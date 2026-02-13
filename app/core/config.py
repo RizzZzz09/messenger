@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: Literal["HS256", "HS384", "HS512", "RS256", "RS384", "RS512"] = Field(
         default=...
     )
+    JWT_COOKIE_CSRF_PROTECT: bool = Field(default=True)
     JWT_TOKEN_LOCATION: List[Literal["headers", "cookies", "json", "query"]] = Field(default=...)
     JWT_ACCESS_TOKEN_EXPIRES: int = Field(default=...)
     JWT_REFRESH_TOKEN_EXPIRES: int = Field(default=...)
@@ -38,6 +39,7 @@ settings = Settings()
 auth_config = AuthXConfig(
     JWT_SECRET_KEY=settings.JWT_SECRET_KEY,
     JWT_ALGORITHM=settings.JWT_ALGORITHM,
+    JWT_COOKIE_CSRF_PROTECT=settings.JWT_COOKIE_CSRF_PROTECT,
     JWT_TOKEN_LOCATION=settings.JWT_TOKEN_LOCATION,
     JWT_ACCESS_TOKEN_EXPIRES=timedelta(minutes=settings.JWT_ACCESS_TOKEN_EXPIRES),
     JWT_REFRESH_TOKEN_EXPIRES=timedelta(days=settings.JWT_REFRESH_TOKEN_EXPIRES),

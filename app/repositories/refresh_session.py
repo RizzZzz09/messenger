@@ -78,3 +78,21 @@ class RefreshSessionRepository:
         result = cast(CursorResult[Any], await self._db.execute(stmt))
         await self._db.commit()
         return (result.rowcount or 0) > 0
+
+    async def get_active_by_hash(self, token_hash: str) -> RefreshSession | None:
+        """Возвращает активную refresh-сессию по хэшу refresh-токена.
+
+        Args:
+            token_hash: Хэш refresh-токена, связанного с refresh-сессией.
+
+        Returns:
+            Активная refresh-сессия, если найдена, иначе None.
+        """
+        stmt = (
+            select(RefreshSession)
+            .where(RefreshSession.refresh_token_hash == token_hash)
+            .where(RefreshSession.revoked_at.is_(None))
+            .where(RefreshSession.expires_at > func.now())
+        )
+        result = await self._db.execute(stmt)
+        return result.scalar_one_or_none()

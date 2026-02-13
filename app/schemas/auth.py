@@ -40,7 +40,7 @@ class RegisterResponse(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    """Смеха авторизации пользователя."""
+    """Схема авторизации пользователя."""
 
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
